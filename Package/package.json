@@ -1,6 +1,6 @@
 {
     "name": "com.hiddenbull.networking",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "displayName": "HiddenBull Networking",
     "description": "A Mirror + Steam (Facepunch) server framework for Unity - a single NetworkState facade over a server browser, roster, ping, roles, moderation, and a dedicated-server console.",
     "unity": "6000.0",

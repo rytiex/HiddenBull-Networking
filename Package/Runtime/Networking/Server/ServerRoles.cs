@@ -29,7 +29,7 @@ namespace HiddenBull.Networking.Server
         /// (the dedicated server's stdin console) and bypasses all permission/level checks — the
         /// dedicated equivalent of the host's Owner bypass. Set and cleared around one invocation.
         /// </summary>
-        public static bool ElevatedContext { get; set; }
+        public static bool ElevatedContext { get; internal set; }
 
         public const string OwnerRoleName = "Owner";
 

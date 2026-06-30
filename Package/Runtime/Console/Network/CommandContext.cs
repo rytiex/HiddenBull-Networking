@@ -10,7 +10,7 @@ namespace HiddenBull.Console.Commands
     /// effective SteamId, NOT the server's) for permission checks and use Reply for output.
     /// Server commands always execute server-side; single-level, main-thread only.
     /// </summary>
-    internal static class CommandContext
+    public static class CommandContext
     {
         /// <summary>Effective SteamId of the player who invoked the command. 0 when none.</summary>
         public static ulong Actor { get; private set; }
@@ -28,7 +28,7 @@ namespace HiddenBull.Console.Commands
         }
 
         /// <summary>Binds the context for one invocation. Dispose (use a 'using' block) to clear.</summary>
-        public static Scope Begin(ulong actor, Action<string> replySink)
+        internal static Scope Begin(ulong actor, Action<string> replySink)
         {
             Actor = actor;
             _replySink = replySink;
@@ -41,7 +41,7 @@ namespace HiddenBull.Console.Commands
             _replySink = null;
         }
 
-        public readonly struct Scope : IDisposable
+        internal readonly struct Scope : IDisposable
         {
             public void Dispose() => Clear();
         }

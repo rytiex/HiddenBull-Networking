@@ -35,7 +35,7 @@ namespace HiddenBull.Networking.Steam
             else
             {
                 SteamClientBootstrap.OnJoinServerRequested -= HandleJoinServerRequested;
-                NetworkChatGate.ClientFilter = null;
+                NetworkChatGate.SteamFilter = null;
                 SteamServerBrowser.Disable();
             }
         }
@@ -50,7 +50,7 @@ namespace HiddenBull.Networking.Steam
             if (SteamInformation.Initialized)
             {
                 Steamworks.SteamUtils.InitFilterText();
-                NetworkChatGate.ClientFilter = (sender, text) =>
+                NetworkChatGate.SteamFilter = (sender, text) =>
                     Steamworks.SteamUtils.FilterText(Steamworks.TextFilteringContext.Chat, sender, text);
             }
         }

@@ -14,7 +14,8 @@ namespace HiddenBull.Networking
         /// <summary>Server: (senderSteamId, text) -> filtered text. Null/empty drops the message.</summary>
         public static Func<ulong, string, string> Filter;
 
-        /// <summary>Client: (senderSteamId, text) -> display text. Applied on receipt, before OnReceived.</summary>
-        public static Func<ulong, string, string> ClientFilter;
+        /// <summary>Client-side Steam per-user profanity filter, applied on receipt before display.
+        /// Set internally by the Steam layer; not a public seam.</summary>
+        internal static Func<ulong, string, string> SteamFilter;
     }
 }

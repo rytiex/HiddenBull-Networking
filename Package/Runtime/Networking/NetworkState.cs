@@ -19,9 +19,14 @@ namespace HiddenBull.Networking
     /// NetworkSessionManager / ServerRoles directly.
     ///
     /// Grouped by perspective:
-    ///   - NetworkState.Server  : server-authoritative lifecycle + connection events (carry ClientData).
-    ///   - NetworkState.Client  : this client's own connection + server notifications.
-    ///   - NetworkState.Players : shared roster (replicated to clients), admins, local player.
+    ///   - Server        : server-authoritative lifecycle + connection events.
+    ///   - Client        : this client's own connection + server notifications.
+    ///   - Players        : replicated roster, admins, ping, local player.
+    ///   - Scene          : scene catalog + active scene + server scene control.
+    ///   - Communication  : channels + text chat.
+    ///   - Roles          : replicated role-name catalog.
+    ///   - Tick           : server-authoritative fixed-rate clock.
+    ///   - Browser        : aggregated server discovery (session-independent).
     ///
     /// Forward-only: NetworkState holds NO logic. NetworkSessionManager is the sole driver
     /// that raises these events; other systems plug in the same way as they come online.
@@ -334,8 +339,8 @@ namespace HiddenBull.Networking
 
                 internal static void RaiseReceived_Internal(ChatMessage msg)
                 {
-                    string text = ApplyFilter && NetworkChatGate.ClientFilter != null
-                        ? NetworkChatGate.ClientFilter(msg.SenderSteamId, msg.Text)
+                    string text = ApplySteamFilter && NetworkChatGate.SteamFilter != null
+                        ? NetworkChatGate.SteamFilter(msg.SenderSteamId, msg.Text)
                         : msg.Text;
 
                     string name = msg.SenderSteamId == 0
@@ -344,7 +349,7 @@ namespace HiddenBull.Networking
 
                     OnReceived?.Invoke(new ChatEntry(msg.SenderSteamId, name, msg.Channel, text, msg.IsWhisper));
                 }
-                private static bool ApplyFilter => true;   // NOTE: bind to a settings toggle
+                public static bool ApplySteamFilter { get; set; } = true; // NOTE: bind to a settings toggle
             }
         }
 

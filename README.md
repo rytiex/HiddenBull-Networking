@@ -22,8 +22,8 @@ A complete server framework for Unity, built on **Mirror** and **Steam (Facepunc
 
 | Dependency | Source | Recommended version |
 |---|---|---|
-| **Mirror** | https://github.com/MirrorNetworking/Mirror | **96.10.0** |
-| **Facepunch.Steamworks** | https://github.com/Facepunch/Facepunch.Steamworks | latest release |
+| **Mirror** | https://github.com/MirrorNetworking/Mirror | **96.10.0** or newer |
+| **Facepunch.Steamworks** | https://github.com/Facepunch/Facepunch.Steamworks | 2.5.1 or newer |
 | **PicoShot.Localization** | https://github.com/PicoShot/Localization-Unity | latest (`?path=/Package`) |
 
 > **VespaIO** — **already bundled** inside this package under `Runtime/Console/VespalO`, so **do not install it separately**. It is a **modified version** of the original ( `<VespaIO-repo-link>` ) adapted for this framework; replacing it with the upstream package will break the console.
@@ -76,7 +76,7 @@ Press Play — the `BOOT_GameInitializer` prefab boots automatically and persist
 
 > **Dedicated servers:** to show up in the Steam master-server list, forward the **query port** (`GamePort + 1`, UDP) and use a real Steam **App ID** (not 480).
 
-> **Build note:** the framework's `NetworkMessage`s rely on Mirror's auto-set `MIRROR_*` defines and `ENABLE_INPUT_SYSTEM`. These are set automatically; if readers/writers misbehave in a build, verify them under *Project Settings → Player → Scripting Define Symbols*.
+> **Build note:** `ENABLE_INPUT_SYSTEM` is set automatically from *Player → Active Input Handling* (Input System or Both) — it does **not** appear in the Scripting Define Symbols list. Mirror's `MIRROR_*` defines **are** added to that list by Mirror's compiler-symbols tool. If Mirror's reader/writer for the framework's `NetworkMessage`s misbehave in a build, verify the `MIRROR_*` defines under *Project Settings → Player → Scripting Define Symbols*.
 
 ## Documentation
 
