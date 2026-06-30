@@ -1,0 +1,19 @@
+{
+    "name": "LMirman.VespaIO.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c31d05f08b191d143bf938dfa5fb29ea",
+        "GUID:709ceec0df8247ad95c67a75cd7113a1"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

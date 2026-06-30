@@ -1,0 +1,16 @@
+{
+    "name": "LMirman.VespaIO",
+    "rootNamespace": "",
+    "references": [
+        "GUID:709ceec0df8247ad95c67a75cd7113a1"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
