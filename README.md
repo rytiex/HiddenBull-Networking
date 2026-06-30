@@ -1,84 +1,92 @@
 # HiddenBull Networking
 
-A Mirror + Steam (Facepunch) server framework. Everything is reached through a single
-`NetworkState` facade; the implementation is internal.
+A complete server framework for Unity, built on **Mirror** and **Steam (Facepunch.Steamworks)**. Run host, dedicated, and peer-to-peer servers — all behind a single clean `NetworkState` facade.
 
-- **Server browser** - dedicated (Steam game-server list) + LAN + P2P (Steam lobbies), merged
-- **Roster + ping**, channel chat, roles & moderation, dedicated-server console
-- **Seams** - `NetworkContentGate` / `NetworkSceneGate` / `NetworkChatGate` for optional layers
+**Features**
+- **Server browser** — dedicated (Steam game-server list), LAN, and P2P (Steam lobbies) in one merged list, with ping, map, player count, version-match and lock/mod badges.
+- **Session management** — Steam-ticket authentication, connection approval, scene sync, replicated roster, and a synchronized fixed-rate tick clock.
+- **Live ping** — per-player latency, broadcast to everyone.
+- **Channel chat** — server-authoritative channels (global, team, whisper) with anti-spam and pluggable filtering.
+- **Roles & moderation** — permission flags, role hierarchy, bans and a whitelist, persisted to JSON.
+- **Dedicated-server console** — in-game and headless command console.
+- **One public API** — gameplay, UI, and console talk only to `NetworkState`; the implementation stays internal. Optional layers plug in through one-way seams (`NetworkContentGate`, `NetworkSceneGate`, `NetworkChatGate`).
+
+## Requirements
+
+**Resolved automatically** (registry packages, pulled in by the package):
+- `com.unity.nuget.newtonsoft-json` — **3.2.2**
+- `com.unity.inputsystem` — **1.19.0**
+- `com.unity.ugui` — **2.0.0**
+
+**Install yourself** — add these to your project *before* installing this package:
+
+| Dependency | Source | Recommended version |
+|---|---|---|
+| **Mirror** | https://github.com/MirrorNetworking/Mirror | **96.10.0** |
+| **Facepunch.Steamworks** | https://github.com/Facepunch/Facepunch.Steamworks | latest release |
+| **PicoShot.Localization** | https://github.com/PicoShot/Localization-Unity | latest (`?path=/Package`) |
+
+> **VespaIO** — **already bundled** inside this package under `Runtime/Console/VespalO`, so **do not install it separately**. It is a **modified version** of the original ( `<VespaIO-repo-link>` ) adapted for this framework; replacing it with the upstream package will break the console.
 
 ## Installation
 
 Install via the Unity Package Manager using the git URL:
 
 1. Open **Window → Package Manager**.
-2. Click the **+** button → **Add package from git URL…**
-3. Paste the URL below and click **Add**: https://github.com/rytiex/HiddenBull-Networking.git?path=/Package
+2. Click **+** → **Add package from git URL…**
+3. Paste and click **Add**:
 
-**Or** add it directly to your project's `Packages/manifest.json` under `"dependencies"`:
+```
+https://github.com/rytiex/HiddenBull-Networking.git?path=/Package
+```
+
+Or add it to `Packages/manifest.json`:
+
 ```json
 "com.hiddenbull.networking": "https://github.com/rytiex/HiddenBull-Networking.git?path=/Package"
 ```
 
-## Requirements
+> Pin a version with a tag: `...git?path=/Package#v0.1.0`
 
-Registry packages (resolved automatically via `package.json`):
-- `com.unity.nuget.newtonsoft-json`
-- `com.unity.inputsystem` - set **Active Input Handling = Input System (or Both)** in Player Settings
-- `com.unity.ugui`
-
-Must be present in the project (NOT auto-resolved - Asset Store / git / bundled):
-- **Mirror** - https://mirror-networking.com
-- **Facepunch.Steamworks** - the Win/Posix DLLs
-- **VespaIO** - bundled under `Runtime/Console/VespalO` (console / command system)
-- **PicoShot.Localization** - git package:
-  `"com.picoshot.localization": "https://github.com/PicoShot/Localization-Unity.git?path=/Package"`
+**➡ Strongly recommended:** import the **Demo Setup** sample right after installing (see Setup, step 2). It gives you a ready-to-run bootstrap prefab, a Steam config asset, and the console input actions — far easier than wiring everything by hand.
 
 ## Setup
 
-1. **Requirements** - import **Mirror** and **Facepunch.Steamworks**, and add the
-   **PicoShot.Localization** git package (see above). The registry packages
-   (Newtonsoft / Input System / uGUI) resolve automatically.
+### 1. Dependencies in place
+Make sure Mirror, Facepunch.Steamworks, and PicoShot.Localization are already in your project (see **Requirements**). The package will not compile until they're present.
 
-2. **Input System** - the console hotkeys read named actions (e.g. `DeveloperConsoleActive`)
-   from the **project-wide** Input Actions, so the included asset must be assigned:
-   - *Edit → Project Settings → Input System Package → Project-wide Actions* →
-     set it to the imported **`INPUT_Action.inputactions`**.
-   - *Edit → Project Settings → Player → Active Input Handling* → **Input System** (or Both).
-   Without this the hotkeys silently do nothing (the action is "not found").
+### 2. Import the Demo Setup *(strongly recommended)*
+**Window → Package Manager → HiddenBull Networking → Samples → Demo Setup → Import.** This copies `DemoSetup.unitypackage` into your project — **double-click it** to import:
+- `BOOT_GameInitializer` prefab — the self-loading bootstrap (session manager, Steam lifecycle, console, debug GUI)
+- `DATA_SteamConfig` — your Steam identity asset
+- `INPUT_Action.inputactions` — the console hotkey actions
 
-3. **Steam Config** - open **`Resources/DATA_SteamConfig`** (or create one via
-   `Create → HiddenBull → Steam Config`) and fill in your real **AppId / ModDir /
-   GameDescription**. It must stay in a **`Resources/`** folder — otherwise `SteamLifecycle`
-   logs an error and disables networking.
+### 3. Input System
+The console reads its hotkeys from the **project-wide** Input Actions:
+- **Project Settings → Input System Package → Project-wide Actions** → assign **`INPUT_Action.inputactions`**.
+- **Project Settings → Player → Active Input Handling** → **Input System** (or *Both*).
 
-4. **Boot** - the **`BOOT_GameInitializer`** prefab self-loads from `Resources` (via
-   `RuntimeInitializeOnLoadMethod`) and persists across scenes. It carries
-   `NetworkSessionManager`, `SteamLifecycle`, the console, and the debug GUI.
+Without this, the console hotkeys silently do nothing.
 
-5. Enter Play - use the on-screen GUI to **Host**, or open the server browser via **Join**.
+### 4. Steam identity
+Open **`DATA_SteamConfig`** (it must live in a **`Resources/`** folder) and set your real **App ID**, **Mod Dir**, and **Game Description**. If no `SteamConfig` is found in `Resources/`, networking is disabled at startup.
 
-> Dedicated servers also need the **query port** (`GamePort + 1`, UDP) port-forwarded to appear
-> in the Steam master-server list. A real Steam **AppId** (not 480) is required for live listing.
+### 5. Run
+Press Play — the `BOOT_GameInitializer` prefab boots automatically and persists across scenes. Use the on-screen GUI to **Host**, or open the **server browser** via **Join**.
 
-## Demo
+> **Dedicated servers:** to show up in the Steam master-server list, forward the **query port** (`GamePort + 1`, UDP) and use a real Steam **App ID** (not 480).
 
-Install the **Demo Setup** sample from the Package Manager (it copies `DemoSetup.unitypackage`
-into your project - double-click it to import the BOOT prefab, `SteamConfig`, and input actions).
+> **Build note:** the framework's `NetworkMessage`s rely on Mirror's auto-set `MIRROR_*` defines and `ENABLE_INPUT_SYSTEM`. These are set automatically; if readers/writers misbehave in a build, verify them under *Project Settings → Player → Scripting Define Symbols*.
 
-## Scripting Define Symbols
+## Documentation
 
-Set automatically; listed for troubleshooting:
-- `ENABLE_INPUT_SYSTEM` - from *Player → Active Input Handling = Input System (or Both)*.
-- `MIRROR`, `MIRROR_*_OR_NEWER` - from Mirror's compiler-symbols tool.
+Detailed guides for each system:
+- [Getting Started](Docs/getting-started.md)
+- [NetworkState — the facade](Docs/network-state.md)
+- [Server Browser](Docs/server-browser.md)
+- [Roles & Moderation](Docs/roles-moderation.md)
+- [Chat](Docs/chat.md)
+- [Console & Commands](Docs/console.md)
+- [Seams & Extensibility](Docs/seams.md)
 
-If Mirror's reader/writer for the framework's `NetworkMessage`s misbehave in a build, verify these
-under *Project Settings → Player → Scripting Define Symbols*.
-
-## API surface
-
-Consumers use only: `NetworkState` (facade), `NetworkSessionManager`, the three gates,
-`ServerStartSettings` / `ClientConnectSettings` / `SteamConfig`, the facade data types
-(`PlayerInfo`, `ServerEntry`, `SceneData`, `SceneField`, enums, `Permissions`/`RoleDefinition`/
-`AdminEntry`), read-only `ServerRoles` / `SteamInformation`, and the scene MonoBehaviours
-(`SteamLifecycle`, `Terminal`, `NetworkCommandBridge`, `HiddenBullNetworkGUI`).
+*Documentation is in progress.*
