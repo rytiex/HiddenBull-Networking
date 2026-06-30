@@ -88,3 +88,9 @@ Detailed guides for each system:
 - [Chat](Docs/chat.md)
 - [Console & Commands](Docs/console.md)
 - [Seams & Extensibility](Docs/seams.md)
+
+## Roadmap
+
+Planned for future releases:
+- 🧩 **Steam Workshop support** — discover, subscribe to, and sync content/mods through Workshop.
+- 🎙️ **Voice chat** — channel-based team / proximity voice over the Steam transport.
