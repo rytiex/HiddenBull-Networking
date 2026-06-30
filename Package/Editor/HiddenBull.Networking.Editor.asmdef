@@ -1,0 +1,6 @@
+{
+    "name": "HiddenBull.Networking.Editor",
+    "references": [ "HiddenBull.Networking" ],
+    "includePlatforms": [ "Editor" ],
+    "autoReferenced": true
+}

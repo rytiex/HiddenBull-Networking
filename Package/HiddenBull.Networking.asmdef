@@ -1,0 +1,17 @@
+{
+    "name": "HiddenBull.Networking",
+    "rootNamespace": "HiddenBull",
+    "references": [
+        "Mirror",
+        "LMirman.VespaIO",
+        "LMirman.VespaIO.LLAPI",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "PicoShot.Localization"
+    ],
+    "autoReferenced": true,
+    "overrideReferences": false,
+    "allowUnsafeCode": false,
+    "noEngineReferences": false
+}
