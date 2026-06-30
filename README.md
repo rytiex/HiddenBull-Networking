@@ -88,5 +88,3 @@ Detailed guides for each system:
 - [Chat](Docs/chat.md)
 - [Console & Commands](Docs/console.md)
 - [Seams & Extensibility](Docs/seams.md)
-
-*Documentation is in progress.*
